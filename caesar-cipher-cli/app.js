@@ -4,10 +4,7 @@ const process = require('process');
 const caesarCoder = require('./caesarCoder').caesarCoder;
 const program = require('./commander').program;
 
-const shift = program.shift;
-const input = program.input;
-const output = program.output;
-const action = program.action;
+const { shift, input, output, action } = program;
 const step = action === 'decode' ? +shift * -1 : +shift;
 
 class CounterTransform extends Transform {
@@ -21,33 +18,41 @@ class CounterTransform extends Transform {
   }
 }
 
-let reader;
-const writer = fs.createWriteStream(`./${output}`);
-const transform = new CounterTransform();
-
-if (input && output) {
-  reader = fs.createReadStream(`./${input}`, 'utf8');
-  reader.pipe(transform).pipe(writer);
-} else if (!input) {
-  console.log('enter string to encode');
+function startStdin(){
   process.stdin.setEncoding('utf8');
+  process.stdin.on('readable', onReadble);
 
-  process.stdin.on('readable', () => {
-    let chunk;
-
-    while ((chunk = process.stdin.read()) !== null) {
-      const str = caesarCoder(chunk.toString('utf8'), step);
-      if (!output) {
-        process.stdout.write(str);
-      } else {
-        reader = Readable.from(str);
-        reader.pipe(transform).pipe(writer);
-        return;
-      }
-    }
-  });
-
-  process.stdin.on('end', () => {
-    process.stdout.write('end');
-  });
 }
+
+function onReadble() {
+  let chunk;
+  while ((chunk = process.stdin.read()) !== null) {
+    const str = caesarCoder(chunk.toString('utf8'), step);
+    if (!output) {
+      process.stdout.write(str);
+    } else {
+      const writer = fs.createWriteStream(`./${output}`, { flags: 'a' })
+      const transform = new CounterTransform();
+      const reader = Readable.from(str);
+      reader.pipe(transform).pipe(writer);
+      console.log('\x1b[32m successfully added to '+ output +' \x1b[37m')
+      startStdin()
+    }
+  }
+}
+
+
+const p = new Promise((resolve, reject) => {
+  if (!input) {
+    console.log('\n \x1b[36m Enter string \x1b[37m \n');
+    startStdin()
+  } else {
+    console.log('\n \x1b[32m Successfully '+ action +'d! \x1b[37m \n');
+    const writer = output
+      ? fs.createWriteStream(`./${output}`, { flags: 'a' })
+      : process.stdout;
+    const transform = new CounterTransform();
+    const reader = fs.createReadStream(`./${input}`, 'utf8');
+    reader.pipe(transform).pipe(writer);
+  }
+});
