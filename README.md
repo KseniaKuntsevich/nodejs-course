@@ -1,60 +1,116 @@
-# RS School REST service
-
-## Prerequisites
-
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-
-## Downloading
+## Start
 
 ```
-git clone {repository URL}
+$ git clone https://github.com/KseniaKuntsevich/nodejs-course.git
 ```
+```
+$ git checkout caesar-cipher-cli
+```
+```
+$ npm install
+```
+```
+$ cd caesar-cipher-cli
+```
+## Commands
 
-## Installing NPM modules
+-s, --shift   number 1-26  
+-a, --action  encode/decode  
+-i, --input   path  
+-o, --output  path  
+
+### Commands description 
+
+**-s, --shift**  
+required: yes  
+value: num 1-26  
+description: sets num of steps to code  
+
+**-a, --action**  
+required: yes  
+value: encode/decode  
+description: sets diraction for coding  
+
+**-i, --input**  
+required: no  
+value: path to input.txt  
+description: takes text from input.txt  
+
+**-o, --output  path**  
+required: no  
+value: path to output.txt  
+description: adds text to output.txt, creating new output.txt if it not existing
+
+## Usage
+
+`--input ./input.txt` can also be `--input './input.txt'` or `--input "./input.txt"`
+
+### Usage with all options
+```
+$ node app -a encode -s 3 -i ./input.txt -o ./encoded.txt
+or
+$ node app --action encode --shift 3 --input ./input.txt --output ./encoded.txt
+```
+> input.txt
+> `This is the most secret message!`
+
+> output.txt
+> `Wklv lv wkh prvw vhfuhw phvvdjh!`
 
 ```
-npm install
+$ node app -a decode -s 3 -i encoded.txt -o plain.txt 
+or
+$ node app --action decode --shift 3 --input encoded.txt --output plain.txt 
 ```
+> output.txt
+> `Wklv lv wkh prvw vhfuhw phvvdjh!`
 
-## Running application
+> plain.txt
+> `This is the most secret message!`
 
+### Usage without output or input file
+opens console dialogue
+
+**1. Missing --output and --input**
 ```
-npm start
+$ node app --action encode --shift 5
 ```
+> Enter string  
+>  `Hi there!`  
+> Mn ymjwj!  
+> `Good bye!`  
+> Ltti gdj!  
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
-## Testing
-
-After application running open new terminal and enter:
-
-To test without authorization
-
-```
-npm test
-```
-
-To test with authorization
-
-```
-npm run test:auth
-```
-
-## Development
-
-If you're using VSCode, you can get a better developer experience from integration with [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions.
-
-### Auto-fix and format
+revert (decode)
 
 ```
-npm run lint
+$ node app --action decode --shift 5
 ```
+> Enter string  
+> `Mn ymjwj!`  
+> Hi there!  
+> `Ltti gdj!`  
+> Good bye!  
 
-### Debugging in VSCode
+**2. Missing --output**
+```
+$ node app --action encode --shift 5 --input ./input.txt
+```
+> input.txt
+> `This is the most secret message!`
+> console
+> `Ymnx nx ymj rtxy xjhwjy rjxxflj!`
 
-Press <kbd>F5</kbd> to debug.
+**3. Missing --input**
+```
+$ node app --action encode --shift 5 --output ./encoded.txt
+```
+> Enter string  
+> `Hello from console!'`  
+> `Hello one more time!`  
+> `And so on...`  
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+> ./encoded.txt  
+`Rovvy pbyw myxcyvo!`  
+`Rovvy yxo wybo dswo!`  
+`Kxn cy yx...` 
