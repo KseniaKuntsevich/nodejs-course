@@ -6,7 +6,7 @@ program.version('0.0.1');
 let programStatus = true;
 
 program
-  .option('-s, --shift [number]', 'Nubmber of step to encode from 1 to 26.', null)
+  .option('-s, --shift [number]', 'Number of step to encode from 1 to 26.', null)
   .option('-i, --input [type]', 'Path to file. Can be missed.', null)
   .option('-o, --output [value]', 'Path to file. Can be missed.', null)
   .option('-a, --action [value]', 'Action encode/decode', null)

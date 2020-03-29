@@ -4,6 +4,9 @@
 $ git clone https://github.com/KseniaKuntsevich/nodejs-course.git
 ```
 ```
+$ cd nodejs-course
+```
+```
 $ git checkout caesar-cipher-cli
 ```
 ```
